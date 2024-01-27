@@ -3,7 +3,7 @@
  * All inherited properties are by default enumerable except properties inherited through 
  * function constructor prototype attribute.
  * 
- * Thats why we need see Prototype methods while we do for...in or Object.Keys() because they're non-enumerable
+ * That's why we dont see Prototype methods like hasOwnProperty , toString , valueOf etc while we do for...in or Object.Keys() because they're non-enumerable
  */
 
 let obj = {
