@@ -4,7 +4,8 @@ export default class NoteHandlers{
     constructor(root){
         this.root = root;
         this.noteAPIInstance = new NoteAPI();
-        this.noteViewInstance = new NoteView(root,this.noteAPIInstance,this.handlers());
+        this.noteViewInstance = new NoteView(root,this.handlers());
+        this.refreshList();
     }
     refreshList = ()=>{
         let notes = this.noteAPIInstance.getNotes();

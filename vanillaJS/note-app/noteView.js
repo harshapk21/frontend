@@ -1,9 +1,7 @@
 export default class NoteView {
-  constructor(root, noteAPI, handlers) {
+  constructor(root, handlers) {
     this.root = root;
-    this.noteAPI = noteAPI;
     this.handlers = handlers;
-    this.renderList(noteAPI.getNotes());
     // document.querySelector('.add-button')?.addEventListener('click',()=>{
     //     this.handlers.handleSaveNote(undefined,'');
     // });
