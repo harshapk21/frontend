@@ -61,3 +61,9 @@ specifically refers to the search string portion of the URL. It does not include
  * Need to build smthing with images , react router , em/rem , fixed header navigation etc , will try to add infinite scroll
  * to it
  */
+
+/**
+ * import { useNavigate } from "react-router-dom";
+ * const navigate = useNavigate();
+ * navigate("/todos");
+ */

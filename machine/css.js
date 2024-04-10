@@ -8,7 +8,7 @@
  * If you give proper width(px or % or vh) and height(preferable px or vh , as % will look for body height which is content height)
  *  along with display:flex , everything is honoured
  *
- * offset width is width included with margins and paddings
+ * offset width is width included with borders and paddings
  * You can give display: flex and give justify,align center even if only one element is there inside or no element also like \
  * <div>{count}</div> , you can make count come exactly in center within the div of flex
  */
@@ -19,6 +19,12 @@
 
 /**
  * Use Css Variables and em,rem when needed , reuse css variables
+ * :root is pseudo selector that gets us root/docu
+ * :root {
+ * --primary-white: white;
+ * }
+ * declaration --smthing-smthing
+ * var(--primary-white)
  */
 
 /**
@@ -48,38 +54,38 @@ Block-level elements that you've seen so far include: Headings. Paragraphs (p) L
  * Images and Inputs are inline by default
  */
 
-<form  onSubmit={()=>null}>
-<button type='submit'></button>
-</form>
+<form onSubmit={() => null}>
+  <button type='submit'></button>
+</form>;
 
 /**
  * Default behaviour of submit inside form is to refresh page , so do e.preventDefault()...to prevent that
- * 
+ *
  * State value is lost on refresh but preserved between renders
  */
 
 /**
  * Events:
- * 
+ *
  * onChange , onKeyDown and onClick , setSelectionRange(start,end) => no effect when empty element
- * 
- * onChange does get triggered on enter and backspace presses , but onKeyDown does
+ *
+ * onChange doesn't get triggered on enter and backspace presses , but onKeyDown does
  * onKeyDown gets triggered for key downs and might be useful for keywords shortcut cmds
  * e.key=='enter' , e.key=='backspace'
- * 
+ *
  * onClick helps with selection range
  */
 
 /**
- * Array of refs has decent usecases like build otp components and also can track individual elements like focus and 
+ * Array of refs has decent usecases like build otp components and also can track individual elements like focus and
  * shift focus etc
  * width , height , offsetWidth etc
- * 
+ *
  * const ref = useRef([]);
  * <div
  * ref={(ele)=>ref.current[index] = ele}
  * />
- * 
+ *
  * you can also create illusion with css and key events especially with inputs and large dropdowns below it
  */
 
@@ -89,8 +95,7 @@ Block-level elements that you've seen so far include: Headings. Paragraphs (p) L
  }
  */
 
-
- /**
+/**
   * visibility: hidden:
 
 This property hides an element while still taking up space in the layout. It's as if the element is invisible, but its dimensions and position affect the surrounding elements.
@@ -118,11 +123,11 @@ Example: display: none;
 
 /**
  * Transform and transition properties are not difficult to use , but once you learn them , the impact is good
- * we know how transform - transforms along x , y , angle and even scale....you can literally make 
- * element hide , visible and shrink on screen when specific style is added dynamically, that effect can be seen if style added 
+ * we know how transform - transforms along x , y , angle and even scale....you can literally make
+ * element hide , visible and shrink on screen when specific style is added dynamically, that effect can be seen if style added
  * dynamically
- * 
- * and transition is how smoothly a particular transform happen after particular dynamic css
+ *
+ * and transition is how smoothly a particular transform happen after particular dynamic css    
  */
 
 /**
@@ -130,13 +135,13 @@ Example: display: none;
  */
 
 /**
- * You go to honour your CSS rules written here and above CSS folder , else you'll be struck
- * 
+ * You should honour your CSS rules written here and above CSS folder , else you'll be struck
+ *
  * again faced issues bcos of
  * Iss: width not honoured , trying to apply width in %
  * sol: need to give in px or vh/vw
  * Reason: % is gonna look at parent & when parent doesnt has content , its width is 0
- * 
+ *
  * Issue: Psuedo element before/after is not honouring width/height even when given in px
  * Sol: make position:absolute or display:inline-block
  * Reason: Pseudo r inline by nature so width is not honoured
@@ -145,14 +150,14 @@ Example: display: none;
 /**
  * In Html , when you wrap an input with label , even when you click label/outer portion , any checkbox
  * or things inside it , events get triggered
- * 
+ *
  * even if you associate like <label for="id_of_element"/> , its going to be triggered , helps with accessibility
  */
 
 /**
  * Observe the way we wrote classes for knob/switch/slider
  * we used input:checked + slider::before {} for siblings
- * 
+ *
  * div.className
  * classname div -> all div childs
  * classname > div -> immediate child
@@ -161,13 +166,69 @@ Example: display: none;
 /**
  * Remember the dark vs normal mode , where we applied styles to document.setAttribute('data-theme','dark/white')
  * & then we did [data-theme="dark/white"] {} to apply styles
- * 
+ *
  * above is based on pure data property attribute styling
- * 
+ *
  * you can do it for tag level as well , like
  * input[value='yes'] {...}
  * input[type="checkbox"][value="someValue"] {...   }
- * 
+ *
  * :checked , :disabled :focus :hover all are pseudo classes &
  * ::before ::after ::placeholder etc all are pseudo elements
  */
+
+/**
+ * box-sizing:content-box -> by default any width we give to tag/element is applied only to content , in reality the element/tag if u 
+ * inspect in browser , width of element would be given w + border + padding (no margin)
+ * 
+ * sometimes this will lead to unexpected increase in width , to prevent that , we do
+ * box-sizing:border-box , if u do it at root level then , then all elements will honour it
+ * 
+ * * {
+  box-sizing: border-box;
+}
+ */
+
+/**
+ * height:auto is the default nature and its the one which helps div's resize acc to inner content
+ * if u hard-code the height , inner content will overflow parent
+ */
+
+/**
+ * Inline elements does not honour both height and width
+ * they honour only horizantal levels like marginLeft etc
+ * complete ignore vertical like paddingTop etc
+ *
+ * inline-block = inline but honours width ,height etc
+ * display:block = similar to block i.e occupy full row horizantal
+ *
+ * top,left etc can only be used when display is not static
+ * By default, absolutely positioned elements shrink-wrap to fit their content, similar to inline elements.
+ *  However, you can explicitly set their width and height, and they can behave like block-level elements in terms of sizing.
+ */
+
+/**
+ * margin:auto works only on block level elements which has some specified width to it...
+ * If no width , block means element takes full size , then no space left for margins
+ * if u give w:50% , then it adjusts element horizantally center by automatically giving margins...
+ */
+
+/**
+ * You can send particular vallue from jsx to css file with style property
+ * style={{'--background-width':dynamic value}}
+ * 
+ * in css file
+ * width:var(--background-width)
+ */
+
+
+/**
+ * In a flex container with flex-direction: column, the inline-level children elements (like <span>) are treated as 
+ * block-level elements in terms of layout, which allows them to properly respect margins.
+ * 
+ * also widths are compromised , read abt 
+ * flex-grow/shrink etc
+ * flex:1 etc....
+ * 
+ * flex-direction: column seems bit dangerous....
+*/

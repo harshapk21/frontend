@@ -1,3 +1,7 @@
+/**
+ * Number(smthing) => gives no. and it gives 0 for all falsy values like '',null & NaN for undefined etc
+ * Number.isNaN(digit) 
+ */
 function parse(str) {
     let result = '';
     for (let i = 0; i < str.length; i++) {

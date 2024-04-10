@@ -31,5 +31,29 @@
   */
 
  /**
+  * try to use useReducer hook for simulating redux , no need to install any dep etc and flow is also smooth
+  * 2 params = reducer fn , initial state
+  * gives state & dispatch
   * 
+  * reudcer is just a normal fn , case:{
+  * return {...state,products:[...state.products,action.payload]
+  * }}
+  * 
+  * whatever you put in payload , is the same thing you access in reducer dispatch({
+  * type:'',
+  * payload:
+  * })
+  * 
+  * can't use set with object for uniqueness
+  */
+
+ /**
+  * you need to export the createContext() variable and import it everywhere if u want to use that
+  * so its better to have a useContext hook , that way you dont need to remember variable name everywhere u need to use it
+  * value in provide should be object value={
+  * {
+  * fn,
+  * state etc
+  * }
+  * } 
   */

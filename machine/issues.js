@@ -64,9 +64,17 @@ data?.map(({ title, id, description }) => (
  */
 
 /**
- * [...Array(5)] = [0,1,2,3,4]
+ * [...Array(5)] = [und,und,und,und,und]
  */
 
-/**classname should be all small */
+/**classnames should be all small */
+
+/**
+ * forgot key to map list
+ * try{}catch(e){}finally {}
+ * in then((res)=>).catch.finally(()=>{})
+ * handle loading as well
+ * use img and alt , its not image
+ */
 
 

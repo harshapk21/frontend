@@ -22,5 +22,5 @@
  * Handle home / route before proceeding
  * again proved the importance of height when trying to align-items:center
  * @media Screen and (maxWidth: 450px)
- * i forgot and a , it was not working
+ * i forgot 'and' a , it was not working
  */
