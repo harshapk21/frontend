@@ -53,3 +53,30 @@ log([..."hello"]);
 // refer image , & then you can do spread , for...of on this object as it has implemented iterator
 
 Array.of(1,2,3) === Array(1,2,3) // creates array of 3 elements. Diff lies in handling single parameter
+
+// Prototype properties are shared across all the instances , there is no instance specific prootype data that you can set direclty is what i thought.
+// But once you make a change/assign a value to prototype through instance , the changed value is specific to that instance only .
+// You can access prototype properties through instances only , you cannot access them using function constructor name , becuase when you add these prototype properties , they are added to prototype object of function constructor.
+// That makes them non-static properties and hence cannot be accessed by Array,Object etc directly , you need an instance to access the shared properties or you can do Array.prototype.value to get the value
+Array.prototype.listeners = [10,11];
+
+Array.prototype.fn = function(){
+this.listeners = this;
+//this.listeners = [10];
+}
+
+let x = [1,2];
+let y = [3,4];
+
+x.fn();
+y.fn();
+
+console.log(Array.prototype.listeners,x.listeners,y.listeners); // logs respective values for default,x,y with [Circular *1]for x & y
+// [Circular *1] - representation for circular reference as we have attached this to listeners which is basically the same array/reference
+// assigining something else instead of this should fix the issue
+// You would see similar indication when logging circular refernce object ref: remove circular reference from an object.
+
+// It's recommended to use a factory pattern for instance specific properties instead of going via a prototype
+// Lot of good info added as 2 images with FactoryPatternInstancePrototype titles & also functionsOG
+
+

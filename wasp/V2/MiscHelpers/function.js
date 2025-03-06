@@ -97,3 +97,4 @@ function customFn(animal, sound) {
   console.log(customFn.genericMethod()); // works but undefined when this is used , same reason as above
   //console.log(customFn.genericMethodInstance()); // doesn't work
 
+  // you can also refer functions OG ss

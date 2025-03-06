@@ -21,7 +21,19 @@
 
 // You can use below code to uniquely check an object
 function isPlainObject(value) {
-    // instanceof Object returns false for null
-    // [] instanceof Object bcomes true so we also have !Array.isArray check
-    return value instanceof Object && !Array.isArray(value);
+  // instanceof Object returns false for null
+  // [] instanceof Object bcomes true so we also have !Array.isArray check
+  return value instanceof Object && !Array.isArray(value);
 }
+
+const List = function (val) {
+  this.next = null;
+  this.val = val;
+};
+const item1 = new List(10);
+const item2 = new List(20);
+const item3 = new List(30);
+item1.next = item2;
+item2.next = item3;
+item3.next = item1;
+console.log(item1);
