@@ -36,4 +36,4 @@ const item3 = new List(30);
 item1.next = item2;
 item2.next = item3;
 item3.next = item1;
-console.log(item1);
+console.log(item1); // Object chain
