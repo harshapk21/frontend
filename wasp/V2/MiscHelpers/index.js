@@ -18,6 +18,7 @@ str[0] = d; // not possible
 
 // you can add properties to array instance also just like you can do for fn & objs , helpful in factory pattern version of event listeners on array. observe factory SS
 
+// You can also use indexOf porperty , initialise to set while tyring to remove duplicates from array
 //EOF
 
 /**
@@ -61,6 +62,23 @@ let map1 = new Map([
 let newMap = new Map([...map1]); // spread wrapped with array gives array of arrays which is the same format as initialisation
 
 console.log(map1.get("a") === newMap.get("a")); // true bcos of shallow copy
+
+/**
+ * Also , for default initialisation for maps & sets , both accept iterables
+ * map - iterable with key,value pair ex: [[key,val],[key,val]]
+ * set - any iterable ex: array,string etc
+ * Both preserve insertion order
+ */
+
+const map11 = new Map([
+  ["name", "Alice"]]);
+  const set1 = new Set([1, 2, 2, 3, 3, 3]); 
+  console.log([...set1]); // [1, 2, 3]
+  const set2 = new Set("aapplee"); // if i iterate/forEach/spread set2, you see a,p,l,e
+  // set2 can also take map as input as map is iterable but vice-versa is not true bcos map need iterables of key,value pairs
+  // * If we do Object.entries on object then we can pass to map , same is with set also , if set has [[key,value] etc ] , then it svalid
+// EOF
+
 
 /**
  * spreading does shallow copy , that means only primitives are copied but all the references(objects & Arrays)(except 0th level i.e the base reference itself) are not copied to new object.
@@ -113,6 +131,14 @@ console.log({...mp}); // maps can be spread bcos they're iterables but they do n
 
 Object.entries([...mp]) // {a:1};
 // EOF
+
+// in keyword can be used over enumerable properties of array & objects
+// property/index in object/array but it is also like for...in i.e both check for enumerbale properties even checking on the prototype chain
+// that's why we use Object.hasOwnProperty() to avoid accessing prototype properties
+
+// EOF
+
+//
 
 // [object Object] is the string representation of object
 // [object Array] = string representation on Array

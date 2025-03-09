@@ -111,3 +111,40 @@ copiedObj.f.g.h = 200;
 
 console.log("Original Object:", originalObj); // { a: 1, b: { c: 2, d: 3 }, e: [4, 5], f: { g: { h: 6 } } }
 console.log("Copied Object:", copiedObj); // { a: 1, b: { c: 100, d: 3 }, e: [10, 5], f: { g: { h: 200 } } }
+
+
+// Deep Check - This sum proves the importance of knowing basics , here they used Object.keys on Arrays & Objects and made the sum work generically
+// for both Arrays & Objects. Arrays have enumerable properties i.e indices , so they can be used with Object.keys & for...in as well.
+
+// Deep Check is checking beyond references , all that matters is if the content is matching
+
+const deepEqual = (object1, object2) => {
+  // get object keys
+  const keys1 = Object.keys(object1);
+  const keys2 = Object.keys(object2);
+  // if mismatched keys
+  if (keys1.length !== keys2.length) {
+  return false;
+  }
+  for (const key of keys1) {
+  // get the values
+  const val1 = object1[key];
+  const val2 = object2[key];
+  // if both values are objects
+  const areObjects = val1 && typeof val1 === "object" && val2 && typeof
+  val2 === "object";
+  // if are objects
+  if(areObjects){
+  // deep check again
+  if(!deepEqual(val1, val2)){
+    return false;
+}
+}
+// if are not objects
+// compare the values
+else if(!areObjects && val1 !== val2){
+return false;
+}
+}
+return true;
+}
