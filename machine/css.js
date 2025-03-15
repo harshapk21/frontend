@@ -195,13 +195,17 @@ Example: display: none;
  */
 
 /**
- * Inline elements does not honour both height and width
- * they honour only horizantal levels like marginLeft etc
- * complete ignore vertical like paddingTop etc
+ * Inline elements does not honour both height and width.
+ * they honour only horizantal levels like marginLeft,right etc
+ * complete ignore vertical like paddingTop,bottom etc
  *
- * inline-block = inline but honours width ,height etc
- * display:block = similar to block i.e occupy full row horizantal
+ * Inline-block can be applied to both inline & block elements.
+ * if applied on block, block ele behaves like inline ex: doesn't occupy full width but still respects height,width all margins/paddings etc.
+ * if applied on inline, inline ele starts honours width, height, ml-mr, pt-pb properties applied to them. but they still don't occupy full width only content width.
+ * display:block = similar to block i.e occupy full row horizantal.
+ * You can apply display: inline to a block element and display: block to an inline element. They both change their natural properties and adapt to new properties as per new display rule]
  *
+ * 
  * top,left etc can only be used when display is not static
  * By default, absolutely positioned elements shrink-wrap to fit their content, similar to inline elements.
  *  However, you can explicitly set their width and height, and they can behave like block-level elements in terms of sizing.

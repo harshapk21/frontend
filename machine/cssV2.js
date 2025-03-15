@@ -16,10 +16,10 @@
  * 
  * height - by default content's height is preserved. If you give % height & if ancestral parent which is relatively positioned doesn't have a height property or invalid height then 
  * the div's height gets corrected to 0 , even content's height is not honoured.
- * if you don't give any height property , contents height is honoured
+ * if you don't give any height property , contents height is honoured.
  * If not positioned anscestor , then it looks up to viewport & honour % interms of vh.
  * 
- * Note: Above mentioned rules are only when child div is absolutely positioned. these doesn't apply when child is reatively/default static positioned(non-positioned follows legacy rules 1st section of page)
+ * Note: Above mentioned rules are only when child div is absolutely/fixed positioned. these doesn't apply when child is reatively/default static positioned(non-positioned follows legacy rules 1st section of page)
  * 
  * height: auto -> default height property and it always honours content size and it's not affected by positioning properties
  */
@@ -29,7 +29,7 @@
  * because 100% of height will be given to content & then to accommodate with border thickness , margins etc etc page scrolls
  * To prevent this , add box-sizing: border-box , this means to include border width & margin space also in the height property mentioned.
  * by default , box-sizing: content-box.
- * It's very useful
+ * It's very useful.
  */
 
 /**
@@ -37,11 +37,16 @@
  * An absolutely positioned element (position: absolute) calculates its offsets (top, left, etc.) and percentage dimensions (e.g., width: 50%) relative to the nearest ancestor with a non-static position (relative, absolute, fixed, sticky).
  * If no such ancestor exists, it uses the viewport as its containing block.
  * 
- * containing blocks:
+ * when position absolute/fixed , the element is removed from normal layout stack & placed in new stack , so the parent div(according to the layout) of the absolutely positioned
+ * element may get collapsed to zero height as it doesn;t have any child in its stack. The positioned child honours the margin of its original layouts parent & start in the position 
+ * respecting that in new stack. but once you give top,left etc , it gets aligned according to positioned ancestor parent & those margins and all are gone.
+ * But margins defined on child are respected even with offsets.
+ * 
+ * containing blocks:(reference parents)
  * static & relative positions - parent block is containing block.
  * absolute position - containing blocks within nearest non-static ancestor(rel,abs,fixed) or viewport if none. unless special conditions like(parent having transform property/filter/perspective)
  * fixed position - containing block within view port always unless special conditions like(parent having transform/filter/perspective property)
- * static -  The nearest scrollable ancestor (usually the viewport). While "stuck" (during scrolling), it behaves like fixed, but its containing block is the scrollable ancestor.
+ * sticky -  The nearest scrollable ancestor (usually the viewport). While "stuck" (during scrolling), it behaves like fixed, but its containing block is the scrollable ancestor.
  * Ensure a threshold (e.g., top, left) is defined.Parent must not have overflow: hidden.
  * 
  * static & relative - not removed from original stack so their position in layout is honoured by childs,siblings etc etc
@@ -50,8 +55,8 @@
  * it will hover over adjacent elements if needed to satisy top , left properties etc...only margin etc is respected by layout not top,left etc
  * Additive effect(margin(layout) + offset(visual)) -> margin pushes others in layout but offset overlays
  * 
- * absolute & fixed - removed from original stack & positioned w.r.t to their containing blocks , their position in layout is not honoured by children,parent etc , may have to give z-index to avoid over-laps w.r.t to stacks
- * Additive effect(margin(layout) + offset(not sure if its visual here)) only w.r.t to containing block -> mergin doesn't push layout as it is removed from original stack
+ * absolute & fixed - removed from original stack & positioned w.r.t to their containing blocks only when given offsets, their position in layout is not honoured by children,parent etc , may have to give z-index to avoid over-laps w.r.t to stacks
+ * Additive effect(margin(layout) + offset(not sure if its visual here)) only w.r.t to containing block -> margin doesn't push layout as it is removed from original stack
  * 
  * sticky - behaves like relative(position in layout is honoured by others etc unlike fixed which is not honoured) until threshold is breached then it becomes sticky after threshold breach.
  * threshold(top,left etc) is v.imp to sticky else it won't stick. The threshold serves 2 purposes 
@@ -63,7 +68,7 @@
  * https://elad.medium.com/css-position-sticky-how-it-really-works-54cd01dc2d46
  * 
  * Sticky vs Fixed -> 
- * 1) layout respects elements position in sticly(bcos of same stack) but not in fixed(different stack)
+ * 1) layout respects elements position in sticky(bcos of same stack) but not in fixed(different stack)
  * 2) offsets always w.r.t viewport in fixed. In sticky offsets & thresholds w.r.t parent with scroll else viewport
  * 3) decision: 
  *    use sticky: places where original layout has to be maintained & need fixed behavour as well -  ex: Table Header(here table header should be respected in layout followed by rows) , Sticky column(same here columns should be first respected in layout)
@@ -118,7 +123,7 @@
  * 
  * flex-shrink: proportion , If there is a situation where all children of flex are to be shrinked , you can control which child should shrink more or which childs will not shrink at all/less.
  * shrinking will stop at min content width/height , after this point other children gets started shrinking. then scroll
- * if proportion is 0 , that means this element should never shrink no matter what , it will shrink others & scroll but no shrink the element
+ * if proportion is 0 , that means this element should never shrink no matter what , it will shrink others to min-width & scroll but never shrink the element(quite powerful)
  * propertion is 1 , default value , all childs should shrink equally
  * if proprtion of a child is higher than other child , then it will shrink more compared to other child
  * flex-shrink doesn't take effect if flex-wrap: wrap is defined , the flex-elements get wrapped as soon as given width property is compromised , let alone compromising min-width or content body width
@@ -128,6 +133,7 @@
  * It even uses/over-powers other childs width to honours it's own basis width.(bit powerful forces others to give up width)
  * when by default if you want to assign a fixed width to flex items , you can use this.
  * default is flex-basis: auto (normal width mentioned), flex-basis: 0 (shrink the width to min content body width).
+ * if needed to shrink , then shrink over-powers basis
  * 
  * Also, texts like p tag, h tags wont increase in size/font-size just becuase we gave flex-grow/basis on them , they just expand and occupy more space as just white space
  * 
@@ -158,8 +164,43 @@
  *    flex-grow -> grow works with extra space on flex layout & since height: auto gives only content space , no extra space
  *    flex-shrink -> shrink comes into picture if you're shortage of space but in this case we always have just enough space so wont work
  *
+ * Flex tries its best to prevent hroizantal scrolling but it scroll when width available is less than minimum content of children. incase of parent width :100%(most divs) , it adds scroll automatically
+ * But incase of fixed width(< vw) parent , children go beyond the parent boundary & you need to manually add a scroll bar or over-flow etc etc or wrap.
+ * Even having flex-basis with good width don't enforce overflow/scroll , 
  * Always remember m if you dont defined height property , height: auto & it takes content height only , width on div/block elements ia always 100%(not incase of absolutely positioned) by default unless explicitly mentioned.
  * 
  */
+
+
+/**
+ * scrolling: 
+ * 1) Most of the inline/inline-block items don't overflow/scroll/break parent width horizantally by default, unless explicitly specified otherwise by saying white-space: nowrap;
+ * 2) texts also wrap when they think they are exceeding parent's width , again they break out even when minimum width(largest word) is also not possible. 
+ * most likely they wont break out for regular sentances but for sentances with larger words/no white-spaces , you can use overflow-wrap: break-word , that helps fit within width.
+ * 3) These properties apply to any block or inline element that has text as it's content. 
+ *    Also if you apply this to a parent & if its children are inline/inline-block , then you can even control the alignment of children similar to flex-wrap even if you don't give flex to parent. 
+ * 
+ *    *all inline/inline-block elements gets wrapped by default within parent's width, so they wont overflow, you can use nowrap to prevent that.
+ * 
+ * 4) white-space: nowrap when applied to parent does not force block-level children to stay in a single line like incase of inline-block/inline children.
+ *    But it still applies to texts of parent & text of children as well.
+ *
+ * 5) scroll along y-axis/x-axis is natural on vp(bcos on root overflow: scroll by default) , happens when child content height/width exceeds parent. scroll comes automatically & 
+ *    also only flex tries to avoid scrolling by squeezing heights/widths(because flex-shrink: 1 by default on all elements)of children but in normal cases.
+ *    child content height/width is  breaks out of parent height/width & scroll is formed naturally on vp. But if you want to create a scroll on parent did with vp , i think you need to mention accordingly
+ * 
+ */
+
+/**
+ * margin: auto
+ * In standard flow , margin: auto works only with block level elements with fixed width(else block default width is 100% & no space for margins etc) , it can center a block level element horizantally only but not vertically.
+ * In flex flow , margin: auto can center a flex item vertically(provided flex container has valid height) & horizantally also even without height/width property on flex item
+ * It can over-power Alignment Properties(justify-content etc etc) , ex: applying margin-left: auto will push element as right as possible while maintaining the order , Pushes the flex item as far to the left as possible along the main axis (horizontal by default).Absorbs all available space between the item and its siblings, distributing it to the right.
+ * similarly it wors for margin-right , top etc etc
+ * How to Achieve Left Alignment in Flexbox
+ * Use margin-right: auto to push an item to the left edge (main axis).
+ * Use justify-content: flex-start on the container to align all items to the left (main axis).
+ */
+
 
 // scrolling , flex grow shrink etc , margin: auto etc ,  grids , infinite scrolling end , boundaries , height: fit-content etc etc
