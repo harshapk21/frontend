@@ -9,12 +9,13 @@
  * 
  * height & width w.r.t parent child divs(block elements - positioned(mainly absolute & not relative , static))
  * 
- * width - we r talking about default case here , even if it's a block element which should take 100% width , but once you make it absolutely positioned , it's width boils down to only its inner content's width , if no inner content then 0 width.
+ * width - we r talking about default case here , even if it's a block element which should take 100% width , but once you make it absolutely/fixed positioned , it's width boils down to only its inner content's width , if no inner content then 0 width(collapse).
  * you need to explicitly set width property if you need additional width than content's width. width in % refers w.r.t positioned ancesstor's width.
  * absolute(units/px) width is honoured no matter what in this case.
  * by default content's width is preserved.
  * 
- * height - by default content's height is preserved. If you give % height & if ancestral parent which is relatively positioned doesn't have a height property or invalid height then 
+ * height - by default content's height is preserved. If content is a child div with position: absolute/fixed & if parent is on height: auto mode , then parent height collpases to 0 bcos positioned element is moved out of layout stack into new stack. this rule applies to relative parent as well.
+ * If you give % height & if ancestral parent which is relatively positioned doesn't have a height property or invalid height then 
  * the div's height gets corrected to 0 , even content's height is not honoured.
  * if you don't give any height property , contents height is honoured.
  * If not positioned anscestor , then it looks up to viewport & honour % interms of vh.
@@ -37,10 +38,13 @@
  * An absolutely positioned element (position: absolute) calculates its offsets (top, left, etc.) and percentage dimensions (e.g., width: 50%) relative to the nearest ancestor with a non-static position (relative, absolute, fixed, sticky).
  * If no such ancestor exists, it uses the viewport as its containing block.
  * 
+ * When you set position: absolute/fixed without specifying top/left/right/bottom, the element remains in its original position in the normal document flow (as if it were still part of the layout) but is removed from the flow (siblings ignore it).
  * when position absolute/fixed , the element is removed from normal layout stack & placed in new stack , so the parent div(according to the layout) of the absolutely positioned
- * element may get collapsed to zero height as it doesn;t have any child in its stack. The positioned child honours the margin of its original layouts parent & start in the position 
+ * element may get collapsed to zero height(if parent is on height: auto mode) as it doesn;t have any child in its stack. This height collapsing rule applies to relative element as well.
+ * The positioned child honours the margin of its original layouts parent & start in that position as said in 1t line of para.
  * respecting that in new stack. but once you give top,left etc , it gets aligned according to positioned ancestor parent & those margins and all are gone.
  * But margins defined on child are respected even with offsets.
+ * if we give top,bottom,left,right: 0 on positioned element without a height/width , it exapands and takes up the whole containing block , but once you add margin: auto , it shrinks and gets centered.
  * 
  * containing blocks:(reference parents)
  * static & relative positions - parent block is containing block.
@@ -133,7 +137,7 @@
  * It even uses/over-powers other childs width to honours it's own basis width.(bit powerful forces others to give up width)
  * when by default if you want to assign a fixed width to flex items , you can use this.
  * default is flex-basis: auto (normal width mentioned), flex-basis: 0 (shrink the width to min content body width).
- * if needed to shrink , then shrink over-powers basis
+ * if needed to shrink , then shrink over-powers basis.
  * 
  * Also, texts like p tag, h tags wont increase in size/font-size just becuase we gave flex-grow/basis on them , they just expand and occupy more space as just white space
  * 
@@ -192,14 +196,39 @@
  */
 
 /**
- * margin: auto
- * In standard flow , margin: auto works only with block level elements with fixed width(else block default width is 100% & no space for margins etc) , it can center a block level element horizantally only but not vertically.
- * In flex flow , margin: auto can center a flex item vertically(provided flex container has valid height) & horizantally also even without height/width property on flex item
+ * margin works/gives effect on individual element while positions & flex you have to keep an eye on parent & child & think of those rules
+ * margin: auto(standard layout)
+ * In standard layout , margin: auto works only with block level elements with fixed width(bcos block default width is 100% & no space for margins etc) , it can center a block level element horizantally only but not vertically.
+ * you can also make a div move to right/left ends side of the viewport but doing margin-left: auto/margin-right: auto.
+ * margin-top/bottom: auto doesn't center a flex item . but you can give absolute units like margin-top: 10px etc & they work normally
+ * 
+ * margin: auto(with positioned elements)
+ * can be centered both vertically & horizantally but need offsets,fixed properties & margin-*: auto
+ * ex: center vertically needs -> top,bottom,height,margin-top: auto & margin-bottom: auto; 
+ *     center over-all -> needs everyting , top,bottom,left,right,margin: auto, height,width etc.
+ * margin: auto centers if stretched and sized.
+ * (with relative elements)
+ * margin-auto only works horizantal center becuase giving offsets to relative element doesn't stretch it
+ * 
+ * In flex layout , margin: auto can center a flex item vertically(provided flex container has valid height) & horizantally also even without height/width property on flex item(because in flex div no more occupies 100% width , it only has content width so fixed width & hence margin: auto worked horizantally also)
+ * you can also center along individual axis , horizantal -> margin-left&right: auto , vertical -> margin-top&bottom: auto
+ * It applies the centering rules even when there are multiple flex items in the flex container.
+ * 
+ * Standard Flow: Prioritizes content flow (top-to-bottom), not dynamic space control.
+
+Flexbox: Designed for precise space distribution in any direction.
+Margin Collapsing:
+
+Standard Flow: Vertical margins collapse (affects spacing between elements).
+Flexbox: Margins don’t collapse, allowing precise control.
+
  * It can over-power Alignment Properties(justify-content etc etc) , ex: applying margin-left: auto will push element as right as possible while maintaining the order , Pushes the flex item as far to the left as possible along the main axis (horizontal by default).Absorbs all available space between the item and its siblings, distributing it to the right.
- * similarly it wors for margin-right , top etc etc
- * How to Achieve Left Alignment in Flexbox
- * Use margin-right: auto to push an item to the left edge (main axis).
- * Use justify-content: flex-start on the container to align all items to the left (main axis).
+ * similarly it works for margin-right , top etc etc
+ * How to Achieve full right Alignment in Flexbox
+ * Use margin-left: auto on first element only, it pushes item to the right edge (main axis) since it has to maintain order it pushes others as well to right.
+ * (if you have multiple flex items and apply margin-left: auto on all , it makes sure that all items has equal margin on left)
+ * Use justify-content: flex-end on the container to align all items to the right (main axis).
+ * margin: auto will center all elements while maintaing equal margins between items
  */
 
 
