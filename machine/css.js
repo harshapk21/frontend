@@ -5,7 +5,7 @@
 // grid-template-columns : fr fr fr
 
 /**
- * If you give proper width(px or % or vh) and height(preferable px or vh , as % will look for body height which is content height)
+ * If you give proper width(px or % or vw) and height(preferable px or vh , as % will look for body height which is content height)
  *  along with display:flex , everything is honoured
  *
  * offset width is width included with borders and paddings
@@ -43,8 +43,8 @@ especially if the string spans multiple lines or contains HTML-like syntax.
  */
 
 /**
- * Progress Bar kind of situations or anything that need to indicate progress within initial container
- * have a nested container with height:100% & green background and dynamically give width through style={{}}
+ * Progress Bar kind of situations or anything that need to indicate progress within initial container.
+ * have a nested container with height:100% & green background and dynamically give width through style={{'--bg-color': green}} , color: var(--bg-color);
  *
  */
 
@@ -55,7 +55,7 @@ Block-level elements that you've seen so far include: Headings. Paragraphs (p) L
  */
 
 <form onSubmit={() => null}>
-  <button type='submit'></button>
+  <button type="submit"></button>
 </form>;
 
 /**
@@ -81,9 +81,9 @@ Block-level elements that you've seen so far include: Headings. Paragraphs (p) L
  * shift focus etc
  * width , height , offsetWidth etc
  *
- * const ref = useRef([]);
+ * const refStore = useRef([]);
  * <div
- * ref={(ele)=>ref.current[index] = ele}
+ * ref={(ele)=>refStore.current[index] = ele}
  * />
  *
  * you can also create illusion with css and key events especially with inputs and large dropdowns below it
@@ -96,38 +96,56 @@ Block-level elements that you've seen so far include: Headings. Paragraphs (p) L
  */
 
 /**
-  * visibility: hidden:
-
-This property hides an element while still taking up space in the layout. It's as if the element is invisible, but its dimensions and position affect the surrounding elements.
-Elements with visibility: hidden are not rendered visually, but they still affect the layout flow.
-Useful when you want to hide an element but maintain its space in the layout, for example, for animation effects or to preserve layout structure.
+visibility: hidden/visible:
+This property hides an element while still taking up space in the layout. but its dimensions and position affect the surrounding elements.
+Elements with visibility: hidden are not rendered visually..but they are present in dom , they can be accessed through js selectors like querySelectors
+They are not clickable/interactable , can do animations but not smooth on its own. It is not interactable ex: hovers & not accessible by screen readers.
+child can over-ride ex: child can have a property visibility: visible & can still show up while parent is not rendered visually.
 Example: visibility: hidden;
-opacity: 0:
 
+opacity: 0/1:
 This property makes an element completely transparent, but it still occupies space in the layout.
-Unlike visibility, setting opacity: 0 doesn't affect the layout flow; other elements will be positioned as if the element with opacity: 0 were not there.
-Useful when you want to visually hide an element but don't need it to affect the layout.
-Often used in conjunction with CSS transitions or animations for fading effects.
-Example: opacity: 0;
-display: none:
+It is still interactable ex: hovers & clicks & also accessibvle by screen readers. they can be accessed through js selectors like querySelectors.
+Often used in conjunction with CSS transitions or animations for smooth fading effects.
+If a parent has opacity: 0;, all its children inherit the transparency because opacity is applied to the entire element and its subtree (including children).
+ Even if you explicitly set opacity: 1 on a child, it won’t override the parent’s transparency.
 
+display: none/aboslute etc:
 This property completely removes the element from the layout. The element is not rendered at all, and it doesn't occupy any space.
-Unlike visibility and opacity, elements with display: none do not affect the layout in any way.
-Useful when you want to completely hide an element and remove it from the layout flow, for example, for hiding/showing content dynamically.
-Example: display: none;
-  */
+no interactions , no accessibility , nothing.
+child cannot over-ride
+*/
 
 /**
  * You can give width:50% to block element and it honours it
  */
 
 /**
- * Transform and transition properties are not difficult to use , but once you learn them , the impact is good
- * we know how transform - transforms along x , y , angle and even scale....you can literally make
- * element hide , visible and shrink on screen when specific style is added dynamically, that effect can be seen if style added
- * dynamically
+ * Transform and transition properties are cutie pies.
+ * 
+ * transition === animation , we use it so that an element moves from initial state to a changed class state(ex: :hover or new addition of class) smoothly.
+ * transition: all/opacity/transform/background 2s(animation span) animation type(ease-in / out etc) delay_to_start_anime
+ * transition works best with properties that doesn't affect layout changes like above props but it fails/doesn't work other-wise with height,width,top,left etc even if give all in transition
+ * same type of transition is observed when element comes back to normal state.
+ * you can control to which css property you need animation as well
+ * 
+ * translate: scale(x,y)/rotate(+clock/-anit-clock)/translate(+-x,+-y) , This property doesn't affect layout change , it only visually changes the element.
+ * 
  *
- * and transition is how smoothly a particular transform happen after particular dynamic css    
+ * and transition is how smoothly a particular transform happen after particular dynamic css
+ * [class*='child1'] {
+  opacity: 0;
+  transition: opacity/all/transform 4s ease-in
+}
+
+  setTimeout(() => {
+    document.querySelector(".child1").classList.add("show");
+  }, 1000)
+
+[class*='child1'][class*='show'] {     or [class*='child1']: hover, :disabled etc etc
+  opacity: 1;
+  background-color: green;
+}
  */
 
 /**
@@ -143,7 +161,7 @@ Example: display: none;
  * Reason: % is gonna look at parent & when parent doesnt has content , its width is 0
  *
  * Issue: Psuedo element before/after is not honouring width/height even when given in px
- * Sol: make position:absolute or display:inline-block
+ * Sol: make position:absolute or display:inline-block(without these , the new content is literally present before/after the parent's text content if any)
  * Reason: Pseudo r inline by nature so width is not honoured
  */
 
@@ -159,8 +177,11 @@ Example: display: none;
  * we used input:checked + slider::before {} for siblings
  *
  * div.className
- * classname div -> all div childs
- * classname > div -> immediate child
+ * .classname div -> all div childs of classname
+ * .classname > div -> immediate child
+ * .c1.c2 -> apply styles to element with 2 classes
+ * c1 + c2 -> 2 immediate siblings
+ * c1 ~ c2 -> doesn't have to be immediate siblings, 
  */
 
 /**
@@ -170,11 +191,29 @@ Example: display: none;
  * above is based on pure data property attribute styling
  *
  * you can do it for tag level as well , like
- * input[value='yes'] {...}
+ * input[value='yes'] {...} , div[class='name'], div.name,[class='name'],  div:not(selector) all of them works
  * input[type="checkbox"][value="someValue"] {...   }
- *
+ * 
+ * [class*="child"]:not(.child,.child1) {
+    background-color: green;
+  }
+  // [class*="child"] = selects all elements with class property having class value as **test**
+  // :not(selector) = selects everyhting execepts the selector in :not.
+
+  [data-random='test'] {
+    background-color: red;
+  }
+  [data-random='test'][data-queen='test'] {
+  background-color: red;
+  }
+  // Add any data attribute to an element & you can use above syntax to give styles to it
+
+  :nth-child() -> should always be applied on the list , not parent not child but the list to which you're refering to as nth
+  for nested: .parent div:nth-child(even) -> for applying style to all even children of parent container
+  for non-nested: div:nth-child(even) -> would be suffice
+ * 
  * :checked , :disabled :focus :hover all are pseudo classes &
- * ::before ::after ::placeholder etc all are pseudo elements
+ * ::before ::after ::placeholder etc all are pseudo elements(2 colons) &
  */
 
 /**
@@ -205,7 +244,7 @@ Example: display: none;
  * display:block = similar to block i.e occupy full row horizantal.
  * You can apply display: inline to a block element and display: block to an inline element. They both change their natural properties and adapt to new properties as per new display rule]
  *
- * 
+ *
  * top,left etc can only be used when display is not static
  * By default, absolutely positioned elements shrink-wrap to fit their content, similar to inline elements.
  *  However, you can explicitly set their width and height, and they can behave like block-level elements in terms of sizing.
@@ -220,19 +259,18 @@ Example: display: none;
 /**
  * You can send particular vallue from jsx to css file with style property
  * style={{'--background-width':dynamic value}}
- * 
+ *
  * in css file
  * width:var(--background-width)
  */
 
-
 /**
- * In a flex container with flex-direction: column, the inline-level children elements (like <span>) are treated as 
+ * In a flex container with flex-direction: column, the inline-level children elements (like <span>) are treated as
  * block-level elements in terms of layout, which allows them to properly respect margins.
- * 
- * also widths are compromised , read abt 
+ *
+ * also widths are compromised , read abt
  * flex-grow/shrink etc
  * flex:1 etc....
- * 
+ *
  * flex-direction: column seems bit dangerous....
-*/
+ */

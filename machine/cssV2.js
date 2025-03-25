@@ -3,6 +3,7 @@
  * 
  * height - if you give a percentage height to child , it first looks up to parent , if parent has non auto height(absolute height in px/vh or valid percentage height w.r.t to its parent)
  * then child height percentage is calculated & honoured else height of child is 0 if no content & if child div has some content inside it , child div's height will be content's height & percentage is not honoured.
+ * This rule holds true even if parent has multiple children & one of them has absolute height , it doesn't help child with %height to be honoured unlike positioned elements case described in that section below.
  * By default , the height of a parent is auto i.e it's content's height.
  * 
  * width - Normally all block level elements has 100% width by default & the child blocks(divs) also honour that. percentage & all works as expected here
@@ -14,9 +15,11 @@
  * absolute(units/px) width is honoured no matter what in this case.
  * by default content's width is preserved.
  * 
- * height - by default content's height is preserved. If content is a child div with position: absolute/fixed & if parent is on height: auto mode , then parent height collpases to 0 bcos positioned element is moved out of layout stack into new stack. this rule applies to relative parent as well.
- * If you give % height & if ancestral parent which is relatively positioned doesn't have a height property or invalid height then 
- * the div's height gets corrected to 0 , even content's height is not honoured.
+ * height - by default content's height is preserved. If parent has only 1 child div with position: absolute/fixed & if parent is on height: auto mode , then parent height collpases to 0 bcos positioned element is moved out of layout stack into new stack. this rule applies to relative parent as well.
+ * If you give % height to absolute positioned child & if ancestral parent which is relatively positioned doesn't have a height property or invalid height then 
+ * the child div's height gets corrected to 0 , even content's height is not honoured.(this rule applies only if the parent has single child)
+ * If parent has multiple children , then child doesn't get collapsed to 0 height & parent has some height now due to other children.
+ * ex: parent with flex,grid or normal parent with multiple children & one of them is not absolutely positioned.
  * if you don't give any height property , contents height is honoured.
  * If not positioned anscestor , then it looks up to viewport & honour % interms of vh.
  * 
@@ -38,9 +41,9 @@
  * An absolutely positioned element (position: absolute) calculates its offsets (top, left, etc.) and percentage dimensions (e.g., width: 50%) relative to the nearest ancestor with a non-static position (relative, absolute, fixed, sticky).
  * If no such ancestor exists, it uses the viewport as its containing block.
  * 
- * When you set position: absolute/fixed without specifying top/left/right/bottom, the element remains in its original position in the normal document flow (as if it were still part of the layout) but is removed from the flow (siblings ignore it).
+ * When you set position: absolute/fixed without specifying top/left/right/bottom, the element remains in its original position in the normal document flow (as if it were still part of the layout but in a different stack) but is removed from the flow (siblings ignore it).
  * when position absolute/fixed , the element is removed from normal layout stack & placed in new stack , so the parent div(according to the layout) of the absolutely positioned
- * element may get collapsed to zero height(if parent is on height: auto mode) as it doesn;t have any child in its stack. This height collapsing rule applies to relative element as well.
+ * element may get collapsed to zero height even without offsets(if parent is on height: auto mode) as it doesn;t have any child in its stack. This height collapsing rule applies to relative element as well.
  * The positioned child honours the margin of its original layouts parent & start in that position as said in 1t line of para.
  * respecting that in new stack. but once you give top,left etc , it gets aligned according to positioned ancestor parent & those margins and all are gone.
  * But margins defined on child are respected even with offsets.
@@ -229,6 +232,34 @@ Flexbox: Margins don’t collapse, allowing precise control.
  * (if you have multiple flex items and apply margin-left: auto on all , it makes sure that all items has equal margin on left)
  * Use justify-content: flex-end on the container to align all items to the right (main axis).
  * margin: auto will center all elements while maintaing equal margins between items
+ */
+
+/**
+ * Grid(rev from css tricks but some info below):
+ * -> In a normal case , grid doesn't squeeze or expand a div(if we have already given a width prop but will expand to occupy 100% of cell if no w prop i.e default w nature of div ) to fit in a cell , div overflows the cell if needed.
+ * -> giving 1fr 1fr auto , will limit 3rd column cell width to only the width of min-content width or any width prop assigned to grid item.
+ * -> grid stretches grid item's height & width to match cell's height & width , if h&w is not specified on the grid item.
+ * -> Grid layout is respected no matter what even if the grid container has to scroll(in normal conditions , no wrapping).
+ * -> when using grid-template-columns: 1fr 1fr etc , no. of rows is kinda auto mode as we don't have to define but you can use grid-auto-rows: 100px so that all rows have 100px height.
+ * 
+ * grid-auto-flow(without specifyng any templating):
+ * -> if you just specify display: grid , grid-auto-flow will be row & hence content is aligned row by row as we havent defined anyting about columns yet just like how normal divs behave
+ * -> use grid-auto-flow: column without any row/column templating to align all children horizantally in 1 row column by column , this is just opposite to grid-auto-flow.
+ * 
+ * grid-template-columns: repeat(auto-fit, minmax(50px,100px))
+ * these have ability to create a dynamic grid layout even without we defining templating rows & cols , as you can see , we just have to give info about col/cell min & maxx width
+ * 
+ * grid-auto-flow(with specifying templating):
+ * -> if we have a well templated m*n or n*n(should not be auto mode ex: if spec only col & row is auto etc, then this won't work as expectd) grid then this auto-flow specifies in how(row by row or col by col) children have to be filled in a grid.
+ * 
+ * justify/align/place-self & justify/align/place-items does the same thing , 1st is applied on grid-item & 2nd is applied on grid container itself. 
+ * These works on grid-item blocks & will work only if grid-item block has fixed width & height which is less then grid cell , these styles applies to grid-item block but not to the content inside the grid item block. use flex on grid item if you want to center content in a grid item.
+ * Also , these properties will shrink the grid item to minimum content height & width if no implicit height & width is defined on the item.
+ * 
+ * grid row & grid col: By default they span over by 1 value , if you only specify grid-colmn , might behave unexpectedly(i.e show empty cells maybe due to default nature of trying to fill row by row ) so try to provide both row & col starters.
+ * grid-template-cols only doesn't change order , so it adds the item to the next available col slot of the row.
+ * 
+ * 
  */
 
 
