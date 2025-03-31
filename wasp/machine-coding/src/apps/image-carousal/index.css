@@ -1,0 +1,47 @@
+.container {
+    position: relative;
+}
+
+.carousal-container {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    border: 1px solid orange;
+    scrollbar-width: none;
+}
+
+img {
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+}
+
+.image {
+    height: 200px;
+    width: 200px;
+    border: 1px solid black;
+}
+
+.nav {
+    width: 20px;
+    height: 20px;
+    border: 1px solid;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    position: absolute;
+    background-color: bisque;
+} 
+
+.nav.left {
+    top: 40%;
+    left: 2%;
+}
+
+.nav.right {
+    top: 40%;
+    right: 2%;
+}
+

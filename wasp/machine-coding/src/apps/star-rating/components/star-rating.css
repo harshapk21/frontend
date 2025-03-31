@@ -1,0 +1,45 @@
+button {
+  all: unset; /*need to explore more on this*/
+  cursor: pointer;
+  line-height: 1; /* Remove extra vertical space */
+  display: inline-flex; 
+  font-size: 24px; /* Control star size via font */
+  width: 1em; /* Match font size */
+  height: 1em;
+  line-height: 25px;
+  margin-right: 10px;
+}
+
+.star {
+  background-color: var(--dynamic-bg-color);
+  position: relative;
+}
+
+.star::before {
+  content: var(--dynamic-hover-desc);
+  font-size: small;
+  position: absolute; /* pseudo elements are inline in nature , so i made it absolute to work with it */
+  padding: 0;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+/* syntax to bring a pseudo element from hidden to visibility */
+/* Also observe how multiple class selectors is done .c1.c2 no gap , i think gap makes it descendent based*/
+.star.active::before { 
+  opacity: 1;
+}
+
+/* attr(data-hover-desc) - way to access data-property assigned to the element */
+
+.star-description {
+  display: none;
+  font-size: xx-small;
+}
+
+/* css selectors cannot read from css variables ex: div:nth-child(var(--some-value) , doesn't work*/
+
+/* .star-description:nth-child(2) {
+  display: inline-block;
+} */

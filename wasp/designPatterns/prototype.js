@@ -1,0 +1,2 @@
+// Class extends , adding prototype methods on array etc are all part of prototype pattern only 
+// Its the ability to re-use code by making use of prototype chaining , you can refer factory example , it does same

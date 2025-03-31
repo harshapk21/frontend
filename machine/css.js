@@ -211,6 +211,10 @@ child cannot over-ride
   :nth-child() -> should always be applied on the list , not parent not child but the list to which you're refering to as nth
   for nested: .parent div:nth-child(even) -> for applying style to all even children of parent container
   for non-nested: div:nth-child(even) -> would be suffice
+
+  // div:nth-of-type(2) = will make sure the style is applied to 2th div in the list
+  // div:nth-child(2) = will make sure the style is applied on 2nd child/element only if it a div
+  The think same rules apply even if you replace div with a selector
  * 
  * :checked , :disabled :focus :hover all are pseudo classes &
  * ::before ::after ::placeholder etc all are pseudo elements(2 colons) &

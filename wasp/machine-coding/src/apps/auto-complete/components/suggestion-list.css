@@ -1,0 +1,22 @@
+.suggestion-list-container {
+  max-height: 150px;
+  width: 200px;
+  overflow-y: auto;
+  border: 1px solid black;
+
+  scroll-behavior: smooth;
+  scrollbar-width: unset;
+}
+
+.suggestion-list-item {
+  max-height: 40px;
+  border: 1px solid;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.suggestion-list-item.active {
+  background-color: aquamarine;
+}
