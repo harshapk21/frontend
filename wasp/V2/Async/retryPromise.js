@@ -60,7 +60,7 @@ function retry(promise, limit = 5) {
       // In this case , a promise is returned again & again but the main promise(_retry) is resolved only when a value is returned by earlier nesting of promises.
       // Everytime the stack has only 1 fn as we return immediately without awaiting.
       // Relies heavily on concept that promises wont be wrapped , they just get resolved to a singular promise evntually , that's the reason even if you explicitly return new Promise from async & async anyways itself returns promise , but still both are merged to a single promise
-      // Also the abv concept is also used by the hithesh's async/sequential promise handling reduce series
+      // Also the abv concept is also used by the hithesh's async/sequential promise handling reduce series(not sure , need to re-evaluate that was chaining ig)
       // a bit un-sure of error propagation - they will be accessible direclty to top fn
       // if (count < limit) return retryWithinLimits();
 

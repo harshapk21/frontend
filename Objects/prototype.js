@@ -1,10 +1,14 @@
 /**
- * prototypen property of an object is a link to its parent and parents prototype is link to its parent
+ * prototype(proto) property of an object is a link to its parent and parents prototype is link to its parent
  * its a link for inheritence
- * 
- * 
  */
 
+/**
+ * If you use spreading & Object.assign() , prototype chain is lost at that point , it only copies OWN & ENUMERABLE properties
+ * from source into resulting object. if you do obj.__proto__ , it will point to Object.Prototype
+ * Use Object.create() to preserve that enumerability chain -> No copying — just sets up the chain.
+ * 
+*/
 
 // Define a parent object
 const animal = {

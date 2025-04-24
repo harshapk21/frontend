@@ -76,7 +76,7 @@ let a = [1, 2, 3];
 // }
 
 // a.reduce(async (acc,curr)=>{
-// 	console.log(acc); // It logged promise objects
+// 	console.log(acc); // It logged promise objects bcos async fn returns promise
 // 	const res =	await	delay(curr);
 //   return res;
 // },0)
@@ -93,14 +93,14 @@ let a = [1, 2, 3];
  * When in loops , async / await awaits the completion of current iteration before starting with next itr.
  * if you use promise.then() in loops , loop iteration will be complete irrespective of promise resolution, no awaiting of iterations.
  *
- * Also , reduce doesn't await for curr iteration completion even if you have used async/await
+ * Also , reduce doesn't await for curr iteration completion even if you have used async/await.
  * It's how reduce is built & it just doesn't wait , it's same like for loops without await & async even though you have used await in reduce cb fn
  */
 
 a.reduce(async (acc, curr) => {
   console.log(curr); // It logs everything immediately
   const res = await async(curr);
-  console.log(curr); // It logs all elements within 3 seconds while for loop with await logs in 6 seconds
+  console.log(curr); // It logs all elements within 3 seconds(1,2,3) while for loop with await logs in 6 seconds(1+2+3)
   return res;
 }, 0);
 
@@ -111,25 +111,28 @@ a.reduce(async (acc, curr) => {
  * new promise timeout has started only after prev iteration timeout is done.
  *
  * remember that .then & .catch return promise , you can make use of the same in reduce or loops
- * While the enitre iteration still completes in a whisker , this chaining helps with nested chaining
+ * While the enitre iteration still completes in a whisker , this chaining helps with nested chaining which inturn helps with sequential promise execution
  */
 
 /**
  * If you're asked to create 5 promises , just do programticaaly , dont do it by hand
  */
-
-// constant resolution
 // let promiseArray = Array(5).fill(1).map((delay)=> fnThatReturnsPromise());
-// // Incase you need incremental resolutions , You can use
-// Array.from({length: 5},(_,index)=> index +1); //return array of promises
+// Incase you need incremental resolutions , You can use
+// Array.from({length: 5},(_,index)=> fnThatReturnsPromise(index)); //return array of promises
+// Array.from({length: 5},(_,index)=> index).map((index)=> fnThatReturnsPromise()) // return array of promises
+// You can use above helpers inside promise.all or anywhere , instead of hard-coding
 
-//Parallel execution - Just use Promise.all(promiseArray), forEach/map , for loop(without await) for parallel execution
+// Parallel execution - Just use Promise.all(promiseArray), forEach & map(without promise chaining) , for loop & for...of(without await) for parallel execution
 // priority promise qn is very good example of managing parallel execution
-//Sequential execution -  for...of  if you use await with it & recursion, map & forEach doesn't wait eeven if you use reduce
+
+// Sequential execution -  for...of, traditional for loops with await key word. recursion can be used with await(ex: retry promise) & you can use promise chaining with loops(without using await keyword), forEach & map as well.
+// Note: map, forEach, reduce doesn't wait even if you use await keyword bcos they are not built to handle async callbacks , only way is to go with promise chaining
+
 // Batch/rate limit - we have seen at the top both recursive/await way & iteration/await way
 
 // Here we haven't used async await in loop , the iterations won't wait for anything but still promises execution is
-// sequential , take a note of them for your ref
+// sequential , take a note of them for your ref. This method is promise chaining.
 
 const p = (timer) => {
   return new Promise((resolve, reject) => {
@@ -145,14 +148,15 @@ const arr = new Array(5).fill(1);
 
 for (let i = 0; i < arr.length; i++) {
   // having let is v.imp in such cases. spend time to understand this
-  // Also it's imp that prev = prev.then is done
+  // Also it's imp that prev = prev.then is done(bcos first all synchronous actions are performed i.e loop is full run & completed)
+  // it doesn't go inside .then at all until whole of the looping is done
   prev = prev.then((val) => {
     if (val) console.log(val);
     return Promise.all([p(num++), p(num++)]);
   });
 }
 
-// sequential process execution with reduce as well
+// sequential process execution with reduce as well , promise chaining
 new Array(4).fill(1).reduce((prev, cur, ind, arr) => {
   return prev.then((val) => {
     if (val) console.log(val);
@@ -161,21 +165,40 @@ new Array(4).fill(1).reduce((prev, cur, ind, arr) => {
   });
 }, Promise.resolve());
 
-
 // Simulating an Async task without promise
 function createAsyncTask() {
   const value = Math.floor(Math.random() * 10);
-  return function(value,callback) {
+  return function (value, callback) {
     setTimeout(() => {
       callback(value);
     }, value * 1000);
   };
 }
 
-// input list can be 
-let cbfn = (value)=>{};
-let asyncArray = [createAsyncTask(),createAsyncTask()].then((asyncfn)=> asyncfn(2,cbfn))
+// input list can be
+let cbfn = (value) => {};
+let asyncArray = [createAsyncTask(), createAsyncTask()].then((asyncfn) =>
+  asyncfn(2, cbfn)
+);
 
 // In above case cbfn is called after timeout value
-
 // The above system works well only with parallel executions , it becomes a nightmare with sequential execution
+
+// Sequential Execution using forEach, map -> promise chaining
+let prevX = Promise.resolve("dellstart");
+Array.from({ length: 5 }, (_, index) => asyncTest).forEach((item) => {
+  prevX = prevX.then((res) => {
+    console.log(res, "res");
+    return item();
+  });
+});
+
+// with reduce
+Array.from({ length: 5 }, (_, index) => asyncTest)
+  .reduce((acc, item) => {
+    return acc.then((res) => {
+      console.log(res, "res");
+      return item();
+    });
+  }, Promise.resolve("dellstart"))
+  .then((res) => console.log(res, "yopp")); // reduce fn returns the return value of callback function , here we are returning promise in cb fn , so we do .then on that
